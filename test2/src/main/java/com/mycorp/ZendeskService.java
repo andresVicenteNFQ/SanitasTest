@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -30,39 +29,83 @@ import portalclientesweb.ejb.interfaces.PortalClientesWebEJBRemote;
 import util.datos.PolizaBasico;
 import util.datos.UsuarioAlta;
 
+/**
+ * 
+ * @author Andres.Vicente
+ *
+ */
 @Service
 public class ZendeskService {
 
     /** The Constant LOG. */
     private static final Logger LOG = LoggerFactory.getLogger( ZendeskService.class );
 
+    /**
+     * 
+     */
     private static final String ESCAPED_LINE_SEPARATOR = "\\n";
+    
+    /**
+     * 
+     */
     private static final String ESCAPE_ER = "\\";
+    
+    /**
+     * 
+     */
     private static final String HTML_BR = "<br/>";
+    
+    /**
+     * 
+     */
     @Value("#{envPC['zendesk.ticket']}")
     public String PETICION_ZENDESK= "";
 
+    /**
+     * 
+     */
     @Value("#{envPC['zendesk.token']}")
     public String TOKEN_ZENDESK= "";
 
+    /**
+     * 
+     */
     @Value("#{envPC['zendesk.url']}")
     public String URL_ZENDESK= "";
 
+    /**
+     * 
+     */
     @Value("#{envPC['zendesk.user']}")
     public String ZENDESK_USER= "";
 
+    /**
+     * 
+     */
     @Value("#{envPC['tarjetas.getDatos']}")
     public String TARJETAS_GETDATOS = "";
 
+    /**
+     * 
+     */
     @Value("#{envPC['cliente.getDatos']}")
     public String CLIENTE_GETDATOS = "";
 
+    /**
+     * 
+     */
     @Value("#{envPC['zendesk.error.mail.funcionalidad']}")
     public String ZENDESK_ERROR_MAIL_FUNCIONALIDAD = "";
 
+    /**
+     * 
+     */
     @Value("#{envPC['zendesk.error.destinatario']}")
     public String ZENDESK_ERROR_DESTINATARIO = "";
 
+    /**
+     * 
+     */
     private SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
 
@@ -76,6 +119,9 @@ public class ZendeskService {
     @Qualifier("restTemplateUTF8")
     private RestTemplate restTemplate;
 
+    /**
+     * 
+     */
     @Autowired
     @Qualifier( "emailService" )
     MensajeriaService emailService;
@@ -203,7 +249,7 @@ public class ZendeskService {
                 parseJsonBravo(datosServicio));
         ticket = ticket.replaceAll("["+ESCAPED_LINE_SEPARATOR+"]", " ");
 
-        try(Zendesk zendesk = new Zendesk.Builder(URL_ZENDESK).setUsername(ZENDESK_USER).setToken(TOKEN_ZENDESK).build()){
+        try(Zendesk zendesk = new Builder(URL_ZENDESK).setUsername(ZENDESK_USER).setToken(TOKEN_ZENDESK).build()){
             //Ticket
             Ticket petiZendesk = mapper.readValue(ticket, Ticket.class);
             zendesk.createTicket(petiZendesk);
@@ -230,6 +276,9 @@ public class ZendeskService {
         return datosUsuario.toString();
     }
 
+    /**
+     * 
+     */
     public List< ValueCode > getTiposDocumentosRegistro() {
         return Arrays.asList( new ValueCode(), new ValueCode() ); // simulacion servicio externo
     }
