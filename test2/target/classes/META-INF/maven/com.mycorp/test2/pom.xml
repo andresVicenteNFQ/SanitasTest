@@ -71,5 +71,11 @@
       <version>4.12</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>sanitas.bravo.clientes</groupId>
+      <artifactId>sportalclientesweb</artifactId>
+      <version>1.19.0</version>
+    </dependency> 
+    
   </dependencies>
 </project>
